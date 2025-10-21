@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shigoto/View/LoginScreen.dart';
 
 class Dashboardscreen extends StatefulWidget {
   const Dashboardscreen({super.key});
@@ -113,7 +114,9 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         title: null,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/login');
+            },
             icon: const Icon(Icons.logout),
             iconSize: 40,
           ),

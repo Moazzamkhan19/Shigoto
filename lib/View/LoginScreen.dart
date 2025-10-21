@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shigoto/View/DashboardScreen.dart';
 class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});
   @override
@@ -85,6 +86,7 @@ class _LoginscreenState extends State<Loginscreen> {
                     height: 50,
                     child:
                     ElevatedButton(onPressed: (){
+                      Navigator.pushReplacementNamed(context, '/Dashboard');
                     },
                       child: Text("Login",
                         style:TextStyle(
