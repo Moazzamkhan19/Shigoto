@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shigoto/View/LoginScreen.dart';
+import 'package:shigoto/View/ProjectBoardScreen.dart';
 
 class Dashboardscreen extends StatefulWidget {
   const Dashboardscreen({super.key});
@@ -45,66 +46,72 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     final double rate = project['completion_rate'] as double? ?? 0.0;
     final String status = project['status'] as String? ?? 'Unknown';
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      elevation: 2.0,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              name,
-              style: const TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
+    return InkWell(
+      onTap: (){
+        Navigator.pushReplacementNamed(context, '/ProjectBoard');
+      },
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        elevation: 2.0,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 10.0),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: LinearProgressIndicator(
-                    value: rate,
-                    backgroundColor: Colors.grey[300],
-                    color: rate == 1.0 ? Colors.green : Colors.blue,
-                    minHeight: 8.0,
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                ),
-                const SizedBox(width: 10.0),
-                Text(
-                  '${(rate * 100).toStringAsFixed(0)}%',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Status:', style: TextStyle(color: Colors.blueGrey)),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), // Adjusted padding
-                  decoration: BoxDecoration(
-                    color: _getStatusColor(status).withOpacity(0.15), // Adjusted opacity
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    status,
-                    style: TextStyle(
-                        color: _getStatusColor(status),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.0
+              const SizedBox(height: 10.0),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: rate,
+                      backgroundColor: Colors.grey[300],
+                      color: rate == 1.0 ? Colors.green : Colors.blue,
+                      minHeight: 8.0,
+                      borderRadius: BorderRadius.circular(4.0),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  const SizedBox(width: 10.0),
+                  Text(
+                    '${(rate * 100).toStringAsFixed(0)}%',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Status:', style: TextStyle(color: Colors.blueGrey)),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4), // Adjusted padding
+                    decoration: BoxDecoration(
+                      color: _getStatusColor(status).withOpacity(0.15), // Adjusted opacity
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      status,
+                      style: TextStyle(
+                          color: _getStatusColor(status),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.0
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
+
   }
 
   @override
@@ -144,21 +151,28 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color(0xFF4169E1),
+        unselectedItemColor: Colors.white,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home,color:Colors.white,),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month),
+            icon: Icon(Icons.add_box_rounded,color:Colors.white,),
+            label: 'Add Project',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month,color:Colors.white,),
             label: 'Calender',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.settings,color:Colors.white,),
             label: 'Settings',
           ),
         ],
-        selectedItemColor: Color(0xFF4169E1),
+        selectedItemColor: Colors.lightBlueAccent,
       ),
     );
   }
