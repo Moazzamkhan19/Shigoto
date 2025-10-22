@@ -8,7 +8,8 @@ class Loginscreen extends StatefulWidget {
 
 class _LoginscreenState extends State<Loginscreen> {
   @override
-  Widget build(BuildContext context) {return Scaffold(
+  Widget build(BuildContext context) {
+    return Scaffold(
     backgroundColor: const Color(0xFF4169E1), // Royal Blue background
     body: Center(
       child: Padding(
