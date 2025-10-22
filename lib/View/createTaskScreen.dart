@@ -114,7 +114,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       onPressed: () {
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
+                        backgroundColor: Color(0xFF4169E1),
                         foregroundColor: Colors.black,
                         padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                         shape: RoundedRectangleBorder(
