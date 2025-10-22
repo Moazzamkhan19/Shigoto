@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shigoto/View/DashboardScreen.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});
   @override
@@ -10,7 +11,7 @@ class _LoginscreenState extends State<Loginscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    backgroundColor: const Color(0xFF4169E1), // Royal Blue background
+    backgroundColor: const Color(0xFF4169E1),
     body: Center(
       child: Padding(
         padding: const EdgeInsets.all(5),
@@ -57,7 +58,7 @@ class _LoginscreenState extends State<Loginscreen> {
                   Spacer(),
                   TextField(
                       decoration:InputDecoration(
-                        labelText: "Username",
+                        labelText: "Email",
                         labelStyle: TextStyle(color: Colors.blueGrey,fontSize: 20),
                         fillColor: Colors.grey[200],
                         filled: true,
@@ -100,6 +101,17 @@ class _LoginscreenState extends State<Loginscreen> {
                       ),),
                   ),
                   SizedBox(height: 25,),
+                  SizedBox(
+                    width: 300,
+                    height: 50,
+                    child:
+                    SignInButton(Buttons.Google,
+                        onPressed: (){},
+                      shape: RoundedRectangleBorder
+                        (borderRadius: BorderRadius.circular(30)),
+                    ),
+                  ),
+                  SizedBox(height: 15,),
                   TextButton(onPressed: (){}, child: Text("Sign up",
                   style:TextStyle(
                     fontSize: 20,

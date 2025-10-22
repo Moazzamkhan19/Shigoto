@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:shigoto/View/DashboardScreen.dart';
+import 'package:shigoto/View/TaskDetail.dart';
 import 'package:flutter/cupertino.dart';
 class Projectboardscreen extends StatefulWidget {
   const Projectboardscreen({super.key});
@@ -35,6 +36,9 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
             children: [
               Text("Project Board ",textAlign:TextAlign.left,
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),),
+              SizedBox(width: 60,),
+              Icon(Icons.group,size: 50,color: Colors.blueAccent,)
+              //projectboard screen->add team members -> generates a link to join to share
             ],
           ),
           SizedBox(height: 20,),
@@ -65,7 +69,12 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
               itemBuilder: (context,index)
               {
                 final task = tasks[index];
-                return _buildCardView(task["title"]!);
+                return InkWell(
+                  onTap:(){
+                    Navigator.pushReplacementNamed(context, '/TaskDetail');
+                  },
+                  child: _buildCardView(task["title"]!),
+                );
               }),
 
             ),
@@ -78,7 +87,9 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
               SizedBox(
                 width: 300,
                 height: 50,
-                child:  ElevatedButton(onPressed: (){},child: Text("Add New Task",style:
+                child:  ElevatedButton(onPressed: (){
+                  Navigator.pushReplacementNamed(context, '/CreateTask');
+                },child: Text("Add New Task",style:
                 TextStyle(color: Colors.white,fontSize: 18),),
                     style: ElevatedButton.styleFrom(
                       backgroundColor:  Color(0xFF4169E1),)),
@@ -98,8 +109,12 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.campaign,color:Colors.white,),
+            label: 'Announcement',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month,color:Colors.white,),
-            label: 'Calender',
+            label: 'Upcoming',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings,color:Colors.white,),
