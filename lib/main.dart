@@ -9,6 +9,8 @@ import 'package:shigoto/View/ProjectBoardScreen.dart';
 import 'package:shigoto/View/TaskDetail.dart';
 import 'package:shigoto/View/settings_screen.dart';
 
+import 'View/SignupScreen.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Loginscreen(), // start normally
+      home: SplashScreen(), // start normally
       routes: {
         '/login': (context) => const Loginscreen(),
         '/Dashboard': (context) => const Dashboardscreen(),
@@ -30,8 +32,7 @@ class MyApp extends StatelessWidget {
         '/TeamMember': (context) => TeamMemberScreen(),
         '/Analytics': (context) => AnalyticsScreen(),
         '/Settings':(context)=> SettingsScreen(),
-        /*'/Signup':(context)=> SignupScreen(),*/
-
+        '/Signup':(context)=> SignupScreen(),
       },
     );
   }
