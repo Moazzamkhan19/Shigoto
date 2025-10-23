@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shigoto/Components/MyDropDownFIeld.dart';
 import 'package:shigoto/Components/MyTextFields.dart';
+import 'package:shigoto/View/ProjectBoardScreen.dart';
 
 class CreateTaskScreen extends StatefulWidget {
   @override
@@ -23,7 +24,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   final Map<String, IconData> statusData = {
     "Pending": Icons.hourglass_bottom_outlined,
     "In Progress": Icons.update_outlined,
-    "Completed": Icons.check_circle_outline,
   };
   String? selectedStatus;
 
@@ -31,6 +31,17 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/ProjectBoard');
+          },
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

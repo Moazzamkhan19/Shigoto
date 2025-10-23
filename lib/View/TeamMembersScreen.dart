@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shigoto/View/ProjectBoardScreen.dart';
 
 class TeamMemberScreen extends StatefulWidget {
   const TeamMemberScreen({super.key});
@@ -32,7 +33,7 @@ class _TeamMemberScreenState extends State<TeamMemberScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, '/ProjectBoard');
           },
         ),
       ),
@@ -59,17 +60,36 @@ class _TeamMemberScreenState extends State<TeamMemberScreen> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: ScrollConfiguration(
-                behavior: const ScrollBehavior().copyWith(overscroll: false),
-                child: ListView.builder(
-                  itemCount: members.length,
-                  itemBuilder: (context, index) {
-                    final member = members[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 9),
-                      child: Container(
+              child: ListView.builder(
+                itemCount: members.length,
+                itemBuilder: (context, index) {
+                  final member = members[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
+                    child: Dismissible(
+                      key: Key(member.name),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF5F7FB),
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 20),
+                        child: const Icon(Icons.delete, color: Colors.white),
+                      ),
+                      onDismissed: (direction) {
+                        setState(() {
+                          members.removeAt(index);
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('${member.name} removed')),
+                        );
+                      },
+                      child: Card(
+                        color: const Color(0xFFF5F7FB),
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: ListTile(
@@ -101,9 +121,9 @@ class _TeamMemberScreenState extends State<TeamMemberScreen> {
                           subtitle: Text('${member.taskCount} tasks'),
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
           ),
