@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shigoto/View/DashboardScreen.dart';
 import 'package:shigoto/View/TaskDetail.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shigoto/View/TeamMembersScreen.dart';
 class Projectboardscreen extends StatefulWidget {
   const Projectboardscreen({super.key});
 
@@ -12,6 +13,16 @@ class Projectboardscreen extends StatefulWidget {
 }
 
 class _ProjectboardscreenState extends State<Projectboardscreen> {
+  int _selectedIndex = 0; // Keeps track of the current tab index
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    if (index == 1) { // 4 = Settings (0-based indexing)
+      Navigator.pushReplacementNamed(context, '/Announcement');
+    }
+  }
   final List<Map<String, String>> tasks = [
     {"title": "Design login page"},
     {"title": "Assigned to All"},
@@ -36,10 +47,13 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
             children: [
               Text("Project Board ",textAlign:TextAlign.left,
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),),
-              SizedBox(width: 60,),
-              Icon(Icons.group,size: 50,color: Colors.blueAccent,)
-              //projectboard screen->add team members -> generates a link to join to share
-            ],
+              SizedBox(width: 40,),
+              IconButton(onPressed: (){
+                Navigator.pushReplacementNamed(context, '/TeamMember');
+              },
+                icon: Icon(Icons.group,size: 50,
+                  color: Colors.blueAccent,),
+              ),],
           ),
           SizedBox(height: 20,),
           Container(
@@ -103,26 +117,29 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
         type: BottomNavigationBarType.fixed,
         backgroundColor: const Color(0xFF4169E1),
         unselectedItemColor: Colors.white,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home,color:Colors.white,),
+            icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.campaign,color:Colors.white,),
+            icon: Icon(Icons.campaign),
             label: 'Announcement',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month,color:Colors.white,),
+            icon: Icon(Icons.calendar_month),
             label: 'Upcoming',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings,color:Colors.white,),
+            icon: Icon(Icons.settings),
             label: 'Settings',
           ),
         ],
         selectedItemColor: Colors.lightBlueAccent,
       ),
+
     );
   }
   Widget _buildCardView(String title)

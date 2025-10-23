@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shigoto/View/LoginScreen.dart';
 import 'package:shigoto/View/ProjectBoardScreen.dart';
+import 'package:shigoto/Components/MyTextFields.dart';
 
 class Dashboardscreen extends StatefulWidget {
   const Dashboardscreen({super.key});
@@ -10,22 +11,49 @@ class Dashboardscreen extends StatefulWidget {
 }
 
 class _DashboardscreenState extends State<Dashboardscreen> {
+  int _selectedIndex = 0; // Keeps track of the current tab index
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    if (index == 4) { // 4 = Settings (0-based indexing)
+      Navigator.pushReplacementNamed(context, '/Settings');
+    }
+    else if (index == 1)
+      {
+        _buildAddProjectDialogBox();
+      }
+    else if (index == 2)
+    {
+      _JoinTeamDialogBox();
+    }
+    else if (index ==3)
+      {
+        Navigator.pushReplacementNamed(context, '/Upcoming');
+      }
+  }
   List<Map<String, dynamic>> projects = [
     {
       'project_name': 'Mobile App Redesign',
       'completion_rate': 0.75,
       'status': 'In Progress',
+      'SDate':'15-07-25',
+      'EDate':'15-07-25',
     },
     {
       'project_name': 'API Optimization',
       'completion_rate': 1.0,
       'status': 'Completed',
+      'SDate':'15-07-25',
+      'EDate':'15-07-25',
     },
     {
       'project_name': 'Database Migration',
       'completion_rate': 0.20,
       'status': 'On Hold',
+      'SDate':'15-07-25',
+      'EDate':'15-07-25',
     },
   ];
 
@@ -45,6 +73,8 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     final String name = project['project_name'] as String? ?? 'N/A';
     final double rate = project['completion_rate'] as double? ?? 0.0;
     final String status = project['status'] as String? ?? 'Unknown';
+    final String sdate = project['SDate'] as String ?? 'Nill';
+    final String edate = project['EDate'] as String ?? 'Nill';
 
     return Dismissible(
       key: ValueKey(project['project_name'] ?? index),
@@ -118,6 +148,20 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                     ),
                   ],
                 ),
+                SizedBox(height: 10,),
+                Row(
+                  children: [
+                    Text("Start date : "+sdate,style:
+                    TextStyle(
+                        fontSize:14.0
+                    ),),
+                    SizedBox(width: 70,),
+                    Text("End date : "+edate,style:
+                    TextStyle(
+                        fontSize:14.0
+                    ),),
+                  ],
+                )
               ],
             ),
           ),
@@ -125,6 +169,137 @@ class _DashboardscreenState extends State<Dashboardscreen> {
       ),
     );
   }
+  void _buildAddProjectDialogBox() async {
+    TextEditingController projectNameController = TextEditingController();
+
+    DateTime? startDate;
+    DateTime? endDate;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Color(0xFFD6E0FF),
+          title: const Text("Add Project"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Start Date Picker Row
+              Row(
+                children: [
+                  const Text("Start Date:", style: TextStyle(fontSize: 17)),
+                  const SizedBox(width: 10),
+                  TextButton(
+                    onPressed: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (picked != null) {
+                        startDate = picked;
+                      }
+                    },
+                    child: const Text("Select",style: TextStyle(color: Colors.black),),
+                  ),
+                ],
+              ),
+
+              // End Date Picker Row
+              Row(
+                children: [
+                  const Text("End Date:", style: TextStyle(fontSize: 17)),
+                  const SizedBox(width: 18),
+                  TextButton(
+                    onPressed: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (picked != null) {
+                        endDate = picked;
+                      }
+                    },
+                    child: const Text("Select",style: TextStyle(color: Colors.black),),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 10),
+
+              // Project Name Field
+              Mytextfields(
+                label: "Project Name",
+                icon: Icons.work,
+                controller: projectNameController,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel",style: TextStyle(
+                color: Colors.black
+              ),),
+            ),
+            TextButton(
+              onPressed: () {
+                print("Start Date: $startDate");
+                print("End Date: $endDate");
+                print("Project Name: ${projectNameController.text}");
+                Navigator.pop(context);
+              },
+              child: const Text("Add",style: TextStyle(
+                color: Colors.black
+              ),),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _JoinTeamDialogBox() async {
+    TextEditingController code = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Color(0xFFD6E0FF),
+          title: const Text("Join Project Team"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Project Name Field
+              Mytextfields(
+                label: "Enter Team Code",
+                controller: code,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel",style: TextStyle(
+                color: Colors.black,
+              ),),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: const Text("Join",style:TextStyle(
+                color: Colors.black,
+              ),),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -177,6 +352,8 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         type: BottomNavigationBarType.fixed,
         backgroundColor: const Color(0xFF4169E1),
         unselectedItemColor: Colors.white,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home,color:Colors.white,),

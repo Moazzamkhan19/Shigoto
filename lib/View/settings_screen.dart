@@ -10,6 +10,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: null,backgroundColor:const Color(0xFF4169E1) ,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.pushReplacementNamed(context, '/Dashboard');
+        },
+        icon: const Icon(Icons.arrow_back),
+        iconSize: 40,
+      ),),
       body: Column(
         children: [
           // 🔵 Blue Header Section
