@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:shigoto/View/AnalyticsScreen.dart';
 import 'package:shigoto/View/SplashScreen.dart';
