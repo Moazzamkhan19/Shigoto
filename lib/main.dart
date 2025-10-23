@@ -7,6 +7,8 @@ import 'package:shigoto/View/LoginScreen.dart';
 import 'package:shigoto/View/DashboardScreen.dart';
 import 'package:shigoto/View/ProjectBoardScreen.dart';
 import 'package:shigoto/View/TaskDetail.dart';
+import 'package:shigoto/View/SignupScreen.dart';
+import 'package:shigoto/View/settings_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,6 +30,9 @@ class MyApp extends StatelessWidget {
         '/TaskDetail': (context)=>Taskdetail(),
         '/TeamMember': (context) => TeamMemberScreen(),
         '/Analytics': (context) => AnalyticsScreen(),
+        '/Settings':(context)=> SettingsScreen(),
+        '/Signup':(context)=> SignupScreen(),
+
       },
     );
   }
