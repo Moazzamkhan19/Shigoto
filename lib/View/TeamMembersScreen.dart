@@ -58,7 +58,7 @@ class _TeamMemberScreenState extends State<TeamMemberScreen> {
               width: 330,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(15),
               ),
               child: ListView.builder(
                 itemCount: members.length,

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: TeamMemberScreen(), // start normally
+      home: Loginscreen(), // start normally
       routes: {
         '/login': (context) => const Loginscreen(),
         '/Dashboard': (context) => const Dashboardscreen(),

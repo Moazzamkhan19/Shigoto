@@ -12,7 +12,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   final titleController = TextEditingController();
   final descController = TextEditingController();
 
-
   final Map<String, dynamic> assigneeData = {
     "All": Icons.people_outline,
     "Naveed": "assets/images/naveed.png",
@@ -29,6 +28,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -42,112 +43,119 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           },
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 100),
-          Padding(
-            padding: const EdgeInsets.only(left: 33),
-            child: Text(
-              "Create Task",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: screenHeight * 0.04),
+            const Padding(
+              padding: EdgeInsets.only(left: 33),
+              child: Text(
+                "Create Task",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 45),
-          Center(
-            child: Container(
-              height: 600,
-              width: 330,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF5F7FB),
-                borderRadius: BorderRadius.circular(25),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 15),
-                  Text(
-                    'Task 1',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 20),
-                  Mytextfields(
-                    label: "Title",
-                    controller: titleController,
-                    icon: Icons.edit_note_outlined,
-                  ),
-                  SizedBox(height: 20),
-                  Mytextfields(
-                    label: "Description",
-                    controller: descController,
-                    icon: Icons.description_outlined,
-                  ),
-                  SizedBox(height: 40),
-                  Text(
-                    'Assignee',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 20),
-                  MyDropdownField(
-                    value: selectedAssignee,
-                    hint: "Select Assignee",
-                    itemDisplay: assigneeData,
-                    onChanged: (val) {
-                      setState(() {
-                        selectedAssignee = val;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 40),
-                  Text(
-                    'Status',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 20),
-                  MyDropdownField(
-                    value: selectedStatus,
-                    hint: "Select Status",
-                    itemDisplay: statusData,
-                    onChanged: (val) {
-                      setState(() {
-                        selectedStatus = val;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 30,),
-
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {
+            SizedBox(height: screenHeight * 0.05),
+            Center(
+              child: Container(
+                width: 330,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF5F7FB),
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: screenHeight * 0.015),
+                    const Text(
+                      'Task 1',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    Mytextfields(
+                      label: "Title",
+                      controller: titleController,
+                      icon: Icons.edit_note_outlined,
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    Mytextfields(
+                      label: "Description",
+                      controller: descController,
+                      icon: Icons.description_outlined,
+                    ),
+                    SizedBox(height: screenHeight * 0.04),
+                    const Text(
+                      'Assignee',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    MyDropdownField(
+                      value: selectedAssignee,
+                      hint: "Select Assignee",
+                      itemDisplay: assigneeData,
+                      onChanged: (val) {
+                        setState(() {
+                          selectedAssignee = val;
+                        });
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF4169E1),
-                        foregroundColor: Colors.black,
-                        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        elevation: 0,
+                    ),
+                    SizedBox(height: screenHeight * 0.04),
+                    const Text(
+                      'Status',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                      child: Text(
-                        'Create Task',
-                        style: TextStyle(
-                          fontSize: 16,
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    MyDropdownField(
+                      value: selectedStatus,
+                      hint: "Select Status",
+                      itemDisplay: statusData,
+                      onChanged: (val) {
+                        setState(() {
+                          selectedStatus = val;
+                        });
+                      },
+                    ),
+                    SizedBox(height: screenHeight * 0.04),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF4169E1),
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 25),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const Text(
+                          'Create Task',
+                          style: TextStyle(fontSize: 16),
                         ),
                       ),
-                    )
-                  )
-
-                ],
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                  ],
+                ),
               ),
             ),
-          ),
-
-        ],
+          ],
+        ),
       ),
     );
   }
