@@ -7,8 +7,9 @@ import 'package:shigoto/View/LoginScreen.dart';
 import 'package:shigoto/View/DashboardScreen.dart';
 import 'package:shigoto/View/ProjectBoardScreen.dart';
 import 'package:shigoto/View/TaskDetail.dart';
-import 'package:shigoto/View/SignupScreen.dart';
 import 'package:shigoto/View/settings_screen.dart';
+
+import 'View/SignupScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,7 +33,6 @@ class MyApp extends StatelessWidget {
         '/Analytics': (context) => AnalyticsScreen(),
         '/Settings':(context)=> SettingsScreen(),
         '/Signup':(context)=> SignupScreen(),
-
       },
     );
   }
