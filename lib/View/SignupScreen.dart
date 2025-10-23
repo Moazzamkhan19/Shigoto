@@ -151,7 +151,7 @@ class SignupScreen extends StatelessWidget {
                           width: 25,
                         ),
                         label: const Text(
-                          'Continue with Google',
+                          'Continue With Google',
                           style: TextStyle(fontSize: 16, color: Colors.black87),
                         ),
                       ),
