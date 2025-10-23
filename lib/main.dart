@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:shigoto/View/AnalyticsScreen.dart';
 import 'package:shigoto/View/SplashScreen.dart';
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const SplashScreen(), // start normally
+      home: SplashScreen(), // start normally
       routes: {
         '/login': (context) => const Loginscreen(),
         '/Dashboard': (context) => const Dashboardscreen(),
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
         '/CreateTask': (context) => CreateTaskScreen(),
         '/TaskDetail': (context)=>Taskdetail(),
         '/TeamMember': (context) => TeamMemberScreen(),
-        'Analytics': (context) => AnalyticsScreen(),
+        '/Analytics': (context) => AnalyticsScreen(),
       },
     );
   }
