@@ -33,7 +33,7 @@ class _LoginscreenState extends State<Loginscreen> {
                 // White container with text fields and buttons
                 Container(
                   height: 500,
-                  width: 380,  // container width
+                  width: 380,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Colors.white,

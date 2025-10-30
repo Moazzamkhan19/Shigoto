@@ -24,8 +24,8 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 // Vector image at the top
                 Container(
-                  height: 250,
-                  width: 330,
+                  height: 300,
+                  width: 300,
                   child: Image.asset("assets/images/signupVector.png"),
                 ),
 

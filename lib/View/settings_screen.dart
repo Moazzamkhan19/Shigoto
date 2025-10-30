@@ -20,7 +20,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),),
       body: Column(
         children: [
-          // 🔵 Blue Header Section
           Container(
             height: MediaQuery.of(context).size.height * 0.35,
             width: double.infinity,
@@ -36,7 +35,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
 
-          // ⚪ White Section (Settings Body)
           Expanded(
             child: Container(
               width: double.infinity,
@@ -60,7 +58,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // 🧍 Name Field
                   const Text(
                     "Name",
                     style: TextStyle(fontSize: 16),
@@ -85,7 +82,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                   const SizedBox(height: 25),
 
-                  // 🌙 Dark Mode Toggle (visual only)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -107,7 +103,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                   const SizedBox(height: 40),
 
-                  // 🗑️ Delete Profile Button
                   Center(
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
@@ -119,7 +114,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ),
                       onPressed: () {
-                        // No delete logic yet (UI only)
                         nameController.clear();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

@@ -12,14 +12,8 @@ class _TeamMemberScreenState extends State<TeamMemberScreen> {
   final List<Member> members = [
     Member(name: "Naveed", taskCount: 6, profileImageUrl: "assets/images/naveed.png"),
     Member(name: "Huzaifa", taskCount: 7, profileImageUrl: "assets/images/huzaifa.png"),
-    Member(name: "Moazzam", taskCount: 7, profileImageUrl: "assets/images/moazzam.png"),
-    Member(name: "Mom", taskCount: 7, profileImageUrl: "assets/images/moazzam.png"),
-    Member(name: "Mzam", taskCount: 7, profileImageUrl: "assets/images/moazzam.png"),
-    Member(name: "Moaam", taskCount: 7, profileImageUrl: "assets/images/moazzam.png"),
-    Member(name: "Moazzm", taskCount: 7, profileImageUrl: "assets/images/moazzam.png"),
-    Member(name: "Moazam", taskCount: 7, profileImageUrl: "assets/images/moazzam.png"),
-    Member(name: "Moazamad", taskCount: 7, profileImageUrl: "assets/images/moazzam.png"),
-    Member(name: "Mzzam", taskCount: 7, profileImageUrl: null),
+    Member(name: "Moazzam", taskCount: 6, profileImageUrl: "assets/images/moazzam.png"),
+    Member(name: "Ali", taskCount: 7, profileImageUrl: null),
   ];
 
   @override

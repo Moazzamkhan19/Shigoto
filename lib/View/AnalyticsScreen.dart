@@ -44,7 +44,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, '/ProjectBoard');
           },
         ),
         backgroundColor: Colors.white,
