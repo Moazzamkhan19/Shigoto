@@ -5,6 +5,7 @@ import 'package:shigoto/View/DashboardScreen.dart';
 import 'package:shigoto/View/TaskDetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shigoto/View/TeamMembersScreen.dart';
+import 'package:shigoto/View/AnalyticsScreen.dart';
 class Projectboardscreen extends StatefulWidget {
   const Projectboardscreen({super.key});
 
@@ -20,8 +21,12 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
       _selectedIndex = index;
     });
     if (index == 1) { // 4 = Settings (0-based indexing)
-      Navigator.pushReplacementNamed(context, '/Announcement');
+      Navigator.pushNamed(context, '/Announcement');
     }
+    else if (index == 3)
+      {
+        Navigator.pushReplacementNamed(context, '/Analytics');
+      }
   }
   final List<Map<String, String>> tasks = [
     {"title": "Design login page"},
@@ -131,6 +136,10 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
             label: 'Upcoming',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.pie_chart),
+            label: 'Project Analytics',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
