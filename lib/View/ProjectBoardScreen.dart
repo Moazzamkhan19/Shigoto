@@ -52,11 +52,11 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
             children: [
               Text("Project Board ",textAlign:TextAlign.left,
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),),
-              SizedBox(width: 10,),
+              SizedBox(width: 5,),
               IconButton(onPressed: (){
                 Navigator.pushReplacementNamed(context, '/TeamMember');
               },
-                icon: Icon(Icons.group,size: 35,
+                icon: Icon(Icons.group,size: 30,
                   color: Colors.blueAccent,),
               ),],
           ),

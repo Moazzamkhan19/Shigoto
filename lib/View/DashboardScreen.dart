@@ -361,12 +361,12 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                   "Dashboard",
                   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(width: 60,),
+                SizedBox(width: 40,),
                 Icon(Icons.account_circle,size: 60,color: Colors.grey)
               ],
             )
           ),
-          SizedBox(height: 30,),
+          SizedBox(height: 25,),
           Expanded(
             child: ListView.builder(
               itemCount: projects.length,
