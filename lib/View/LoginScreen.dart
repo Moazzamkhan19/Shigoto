@@ -24,15 +24,15 @@ class _LoginscreenState extends State<Loginscreen> {
                 // Vector image
                 Image.asset(
                   "assets/images/loginVector.png",
-                  width: 300,
-                  height: 300,
+                  width: 2500,
+                  height: 250,
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
 
                 // White container with text fields and buttons
                 Container(
-                  height: 500,
+                  height: 400,
                   width: 380,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -58,7 +58,7 @@ class _LoginscreenState extends State<Loginscreen> {
                           letterSpacing: 2,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
 
                       // Email field
                       TextField(
@@ -73,7 +73,7 @@ class _LoginscreenState extends State<Loginscreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
 
                       // Password field
                       TextField(
@@ -88,12 +88,12 @@ class _LoginscreenState extends State<Loginscreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 35),
+                      const SizedBox(height: 10),
 
                       // Login Button
                       SizedBox(
                         width: 250,
-                        height: 50,
+                        height: 30,
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.pushReplacementNamed(context, '/Dashboard');
@@ -112,7 +112,7 @@ class _LoginscreenState extends State<Loginscreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 10),
                       // OR Divider
                       Row(
                         children: const [
@@ -124,11 +124,11 @@ class _LoginscreenState extends State<Loginscreen> {
                           Expanded(child: Divider(thickness: 1)),
                         ],
                       ),
-                      const SizedBox(height: 25),
+                      const SizedBox(height: 10),
                       // Google Sign-in Button
                       SizedBox(
                         width: 300,
-                        height: 50,
+                        height: 30,
                         child: SignInButton(
                           Buttons.Google,
                           onPressed: () {},
@@ -138,7 +138,7 @@ class _LoginscreenState extends State<Loginscreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 25),
+                      const SizedBox(height: 20),
                       // Sign Up row
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

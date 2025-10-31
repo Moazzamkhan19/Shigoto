@@ -20,40 +20,38 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     if (index == 4) { // 4 = Settings (0-based indexing)
       Navigator.pushReplacementNamed(context, '/Settings');
     }
-    else if (index == 1)
-      {
-        _buildAddProjectDialogBox();
-      }
-    else if (index == 2)
-    {
+    else if (index == 1) {
+      _buildAddProjectDialogBox();
+    }
+    else if (index == 2) {
       _JoinTeamDialogBox();
     }
-    else if (index ==3)
-      {
-        Navigator.pushReplacementNamed(context, '/Upcoming');
-      }
+    else if (index == 3) {
+      Navigator.pushReplacementNamed(context, '/Upcoming');
+    }
   }
+
   List<Map<String, dynamic>> projects = [
     {
       'project_name': 'Mobile App Redesign',
       'completion_rate': 0.75,
       'status': 'In Progress',
-      'SDate':'15-07-25',
-      'EDate':'15-07-25',
+      'SDate': '15-07-25',
+      'EDate': '15-07-25',
     },
     {
       'project_name': 'API Optimization',
       'completion_rate': 1.0,
       'status': 'Completed',
-      'SDate':'15-07-25',
-      'EDate':'15-07-25',
+      'SDate': '15-07-25',
+      'EDate': '15-07-25',
     },
     {
       'project_name': 'Database Migration',
       'completion_rate': 0.20,
       'status': 'On Hold',
-      'SDate':'15-07-25',
-      'EDate':'15-07-25',
+      'SDate': '15-07-25',
+      'EDate': '15-07-25',
     },
   ];
 
@@ -69,16 +67,21 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         return Colors.grey;
     }
   }
-  Widget _buildProjectItem(Map<String, dynamic> project, int index, Function onDelete) {
+
+  Widget _buildProjectItem(BuildContext context,
+      Map<String, dynamic> project,
+      int index,
+      Function onDelete,) {
     final String name = project['project_name'] as String? ?? 'N/A';
     final double rate = project['completion_rate'] as double? ?? 0.0;
     final String status = project['status'] as String? ?? 'Unknown';
-    final String sdate = project['SDate'] as String ?? 'Nill';
-    final String edate = project['EDate'] as String ?? 'Nill';
+    final String sdate = project['SDate'] as String? ?? 'Nill';
+    final String edate = project['EDate'] as String? ?? 'Nill';
 
     return Dismissible(
       key: ValueKey(project['project_name'] ?? index),
-      direction: DismissDirection.endToStart, // Slide from right to left
+      direction: DismissDirection.endToStart,
+      // Slide from right to left
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -92,83 +95,113 @@ class _DashboardscreenState extends State<Dashboardscreen> {
         onTap: () {
           Navigator.pushReplacementNamed(context, '/ProjectBoard');
         },
-        child: Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          elevation: 2.0,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.97,
+          // reduce width
+          child: Card(
+            margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+            elevation: 2.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  // Project Name
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10.0),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: LinearProgressIndicator(
-                        value: rate,
-                        backgroundColor: Colors.grey[300],
-                        color: rate == 1.0 ? Colors.green : Colors.blue,
-                        minHeight: 8.0,
-                        borderRadius: BorderRadius.circular(4.0),
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    Text(
-                      '${(rate * 100).toStringAsFixed(0)}%',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Status:', style: TextStyle(color: Colors.blueGrey)),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: _getStatusColor(status).withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        status,
-                        style: TextStyle(
-                          color: _getStatusColor(status),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14.0,
+
+                  const SizedBox(height: 10.0),
+
+                  // Progress bar + %
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: LinearProgressIndicator(
+                          value: rate,
+                          backgroundColor: Colors.grey[300],
+                          color: rate == 1.0 ? Colors.green : Colors.blue,
+                          minHeight: 8.0,
+                          borderRadius: BorderRadius.circular(4.0),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10,),
-                Row(
-                  children: [
-                    Text("Start date : "+sdate,style:
-                    TextStyle(
-                        fontSize:14.0
-                    ),),
-                    SizedBox(width: 70,),
-                    Text("End date : "+edate,style:
-                    TextStyle(
-                        fontSize:14.0
-                    ),),
-                  ],
-                )
-              ],
+                      const SizedBox(width: 10.0),
+                      Text(
+                        '${(rate * 100).toStringAsFixed(0)}%',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 10.0),
+
+                  // Status Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Status:',
+                        style: TextStyle(color: Colors.blueGrey),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: _getStatusColor(status).withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          status,
+                          style: TextStyle(
+                            color: _getStatusColor(status),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 10.0),
+
+                  // Dates Row (responsive)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Start date: $sdate",
+                          style: const TextStyle(fontSize: 14.0),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          "End date: $edate",
+                          style: const TextStyle(fontSize: 14.0),
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.end,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+
   void _buildAddProjectDialogBox() async {
     TextEditingController projectNameController = TextEditingController();
 
@@ -312,7 +345,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
               Navigator.pushReplacementNamed(context, '/login');
             },
             icon: const Icon(Icons.logout),
-            iconSize: 40,
+            iconSize: 30,
           ),
     ],
       ),
@@ -328,21 +361,22 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                   "Dashboard",
                   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(width: 120,),
+                SizedBox(width: 60,),
                 Icon(Icons.account_circle,size: 60,color: Colors.grey)
               ],
             )
           ),
-          SizedBox(height: 35,),
+          SizedBox(height: 30,),
           Expanded(
             child: ListView.builder(
               itemCount: projects.length,
               itemBuilder: (context, index) {
-                return _buildProjectItem(projects[index], index, (int i) {
+                return _buildProjectItem(context, projects[index], index, (int i) {
                   setState(() {
                     projects.removeAt(i);
                   });
                 });
+                ;
               },
             )
           ),

@@ -52,18 +52,18 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
             children: [
               Text("Project Board ",textAlign:TextAlign.left,
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),),
-              SizedBox(width: 40,),
+              SizedBox(width: 10,),
               IconButton(onPressed: (){
                 Navigator.pushReplacementNamed(context, '/TeamMember');
               },
-                icon: Icon(Icons.group,size: 50,
+                icon: Icon(Icons.group,size: 35,
                   color: Colors.blueAccent,),
               ),],
           ),
           SizedBox(height: 20,),
           Container(
             width: 380,
-            height: 500,
+            height: 400,
             decoration: BoxDecoration(
               color: CupertinoColors.systemGrey5,
               borderRadius: BorderRadius.circular(16.0),

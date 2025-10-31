@@ -130,7 +130,7 @@ class _TaskdetailState extends State<Taskdetail> {
                     style: TextStyle(fontSize: 20, color: Colors.black),
                   ),
                 ),
-                const SizedBox(width: 90),
+                const SizedBox(width: 60),
                 ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(

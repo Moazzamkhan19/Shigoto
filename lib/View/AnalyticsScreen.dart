@@ -65,10 +65,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 45),
+          const SizedBox(height: 30),
           Center(
             child: Container(
-              height: 550,
+              height: 480,
               width: 330,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
@@ -89,7 +89,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 400,
+                    height: 350,
                     child: PieChart(
                       PieChartData(
                         sectionsSpace: 3,
@@ -147,7 +147,7 @@ class LegendItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 30,),
+        SizedBox(width: 20,),
         Container(width: 16, height: 16, color: color),
         const SizedBox(width: 6),
         Text(text, style: const TextStyle(fontSize: 14)),

@@ -24,14 +24,14 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 // Vector image at the top
                 Container(
-                  height: 300,
+                  height: 200,
                   width: 300,
                   child: Image.asset("assets/images/signupVector.png"),
                 ),
 
                 // White container with form fields
                 Container(
-                  height: 500,
+                  height: 410,
                   width: 380,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -57,7 +57,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           letterSpacing: 2,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
 
                       // Full Name
                       TextField(
@@ -71,7 +71,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 10),
 
                       // Email
                       TextField(
@@ -85,7 +85,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 10),
 
                       // Password
                       TextField(
@@ -100,12 +100,12 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 10),
 
                       // Sign Up button
                       SizedBox(
                         width: 250,
-                        height: 50,
+                        height: 30,
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.pushReplacementNamed(
@@ -128,7 +128,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 10),
 
                       // OR Divider
                       Row(
@@ -147,7 +147,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       // Google Sign-in Button
                       SizedBox(
                         width: 300,
-                        height: 50,
+                        height: 30,
                         child: SignInButton(
                           Buttons.Google,
                           onPressed: () {},
@@ -157,7 +157,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       // Already have account?
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
