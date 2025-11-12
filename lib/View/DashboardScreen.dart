@@ -156,7 +156,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                         decoration: BoxDecoration(
                           color: _getStatusColor(status).withOpacity(0.15),
                           borderRadius: BorderRadius.circular(4),
-                        ),
+                          ),
                         child: Text(
                           status,
                           style: TextStyle(

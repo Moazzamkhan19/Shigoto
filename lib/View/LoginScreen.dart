@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shigoto/View/DashboardScreen.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:shigoto/View/login_button.dart';
 
 class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});
@@ -49,6 +50,7 @@ class _LoginscreenState extends State<Loginscreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+
                       const Text(
                         "Welcome Back",
                         style: TextStyle(
@@ -91,26 +93,8 @@ class _LoginscreenState extends State<Loginscreen> {
                       const SizedBox(height: 10),
 
                       // Login Button
-                      SizedBox(
-                        width: 250,
-                        height: 30,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(context, '/Dashboard');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF4169E1),
-                            elevation: 2,
-                          ),
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                      Center(
+                        child: LoginButton(),
                       ),
                       const SizedBox(height: 10),
                       // OR Divider
