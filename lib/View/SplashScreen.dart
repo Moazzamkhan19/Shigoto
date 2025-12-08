@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'DashboardScreen.dart';
 import 'LoginScreen.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -28,8 +30,10 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, '/login');
-
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => AuthWrapper()),
+      );
       /*Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const Loginscreen()),
@@ -73,4 +77,27 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 }
+class AuthWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (snapshot.hasData) {
+          return Dashboardscreen();  // user logged in
+        } else {
+          return Loginscreen();      // user not logged in
+        }
+      },
+    );
+  }
+}
+
+
 

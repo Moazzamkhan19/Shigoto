@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:shigoto/View/DashboardScreen.dart';
+
+import '../Controller/Authentication.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -10,11 +13,19 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final UsernameController = TextEditingController();
+  final Authentication auth = Authentication();
+  bool _isLoading = false;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF4169E1),
-      body: SafeArea(
+      body: SingleChildScrollView(
+      child:SafeArea(
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(5),
@@ -61,10 +72,12 @@ class _SignupScreenState extends State<SignupScreen> {
 
                       // Full Name
                       TextField(
+                        controller: UsernameController,
                         decoration: InputDecoration(
                           labelText: "Full Name",
                           fillColor: Colors.grey[200],
                           filled: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide.none,
@@ -75,10 +88,12 @@ class _SignupScreenState extends State<SignupScreen> {
 
                       // Email
                       TextField(
+                        controller: emailController,
                         decoration: InputDecoration(
                           labelText: "Email",
                           fillColor: Colors.grey[200],
                           filled: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide.none,
@@ -89,11 +104,13 @@ class _SignupScreenState extends State<SignupScreen> {
 
                       // Password
                       TextField(
+                        controller: passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           labelText: "Password",
                           fillColor: Colors.grey[200],
                           filled: true,
+                          contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: BorderSide.none,
@@ -107,9 +124,30 @@ class _SignupScreenState extends State<SignupScreen> {
                         width: 250,
                         height: 30,
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushReplacementNamed(
-                                context, '/Dashboard');
+                          onPressed: _isLoading
+                              ? null
+                              : () async {
+                            setState(() => _isLoading = true);
+
+                            String res = await auth.signUp(
+                              username: UsernameController.text.trim(),
+                              email: emailController.text.trim(),
+                              password: passwordController.text.trim(),
+                            );
+
+                            if (!mounted) return; // Safety check
+
+                            if (res == "Success") {
+                              print("SignUp successful, navigating to Dashboard");
+
+                              Navigator.pushReplacementNamed(context, '/Dashboard');
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(res)),
+                              );
+                            }
+
+                            setState(() => _isLoading = false);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF4169E1),
@@ -118,7 +156,16 @@ class _SignupScreenState extends State<SignupScreen> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          child: const Text(
+                          child: _isLoading
+                              ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                              : const Text(
                             "Sign Up",
                             style: TextStyle(
                               color: Colors.white,
@@ -150,8 +197,28 @@ class _SignupScreenState extends State<SignupScreen> {
                         height: 30,
                         child: SignInButton(
                           Buttons.Google,
-                          onPressed: () {},
-                          shape: RoundedRectangleBorder(
+                            onPressed: _isLoading
+                            ? null
+                            : () async {
+                      setState(() => _isLoading = true);
+
+                      String res = await auth.signInWithGoogle();
+
+                      if (!mounted) return;
+
+                      if (res == "Success") {
+                      Navigator.pushReplacementNamed(context, '/Dashboard');
+                      } else if (res == "Cancelled") {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("Google sign-in cancelled")));
+                      } else {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(res)));
+                      }
+
+                      setState(() => _isLoading = false);
+                      },
+                        shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
@@ -185,6 +252,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

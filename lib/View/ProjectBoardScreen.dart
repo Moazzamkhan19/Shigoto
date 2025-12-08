@@ -6,6 +6,7 @@ import 'package:shigoto/View/TaskDetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shigoto/View/TeamMembersScreen.dart';
 import 'package:shigoto/View/AnalyticsScreen.dart';
+import 'package:shigoto/View/Upcoming.dart';
 class Projectboardscreen extends StatefulWidget {
   const Projectboardscreen({super.key});
 
@@ -20,12 +21,24 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
     setState(() {
       _selectedIndex = index;
     });
-    if (index == 1) { // 4 = Settings (0-based indexing)
+    if (index == 0)
+    {
+      Navigator.pushNamed(context, '/Dashboard');
+    }
+    else if (index == 1) {
       Navigator.pushNamed(context, '/Announcement');
     }
+    else if (index == 2)
+      {
+        Navigator.pushReplacementNamed(context, '/Upcoming');
+      }
     else if (index == 3)
       {
         Navigator.pushReplacementNamed(context, '/Analytics');
+      }
+    else
+      {
+        Navigator.pushReplacementNamed(context, '/Settings');
       }
   }
   final List<Map<String, String>> tasks = [

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shigoto/View/DashboardScreen.dart';
-
 class LoginButton extends StatefulWidget {
-  const LoginButton({Key? key}) : super(key: key);
+  final VoidCallback onTap;
+
+  const LoginButton({Key? key, required this.onTap}) : super(key: key);
 
   @override
   State<LoginButton> createState() => _LoginButtonState();
@@ -38,14 +39,12 @@ class _LoginButtonState extends State<LoginButton>
 
   void _onPressed() async {
     await _controller.forward();
+
     if (mounted) {
-      Navigator.of(context).pushReplacement(PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const Dashboardscreen(),
-        transitionsBuilder: (_, animation, __, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-      ));
+      widget.onTap(); // calls login() from LoginScreen
     }
+
+    _controller.reverse(); // optional: animate back
   }
 
   @override
@@ -55,7 +54,7 @@ class _LoginButtonState extends State<LoginButton>
       builder: (context, child) {
         return SizedBox(
           width: 250,
-          height: 40,
+          height: 30,
           child: ElevatedButton(
             onPressed: _onPressed,
             style: ElevatedButton.styleFrom(
@@ -66,7 +65,7 @@ class _LoginButtonState extends State<LoginButton>
               "Login",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 17,
                 fontWeight: FontWeight.bold,
               ),
             ),

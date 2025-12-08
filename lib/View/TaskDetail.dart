@@ -8,6 +8,24 @@ class Taskdetail extends StatefulWidget {
 }
 
 class _TaskdetailState extends State<Taskdetail> {
+  int _selectedIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    if (index == 0)
+    {
+      Navigator.pushNamed(context, '/Dashboard');
+    }
+    else if (index == 1)
+    {
+      Navigator.pushReplacementNamed(context, '/Upcoming');
+    }
+    else
+    {
+      Navigator.pushReplacementNamed(context, '/Settings');
+    }
+  }
   // Your comments list remains the same
   List<Map<String, String>> comments = [
     {
@@ -191,17 +209,19 @@ class _TaskdetailState extends State<Taskdetail> {
         type: BottomNavigationBarType.fixed,
         backgroundColor: const Color(0xFF4169E1),
         unselectedItemColor: Colors.white,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home,color:Colors.white,),
+            icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month,color:Colors.white,),
+            icon: Icon(Icons.calendar_month),
             label: 'Upcoming',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings,color:Colors.white,),
+            icon: Icon(Icons.settings),
             label: 'Settings',
           ),
         ],
