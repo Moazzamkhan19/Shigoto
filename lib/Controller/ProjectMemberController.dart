@@ -23,8 +23,6 @@ class ProjectMemberController {
     });
   }
 
-
-
   /// Add a member to project by email and store name as well
   Future<String> addMemberByEmail(String projectId, String email) async {
     try {
