@@ -35,13 +35,13 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Color(0xFFD6E0FF),
-          title: const Text("Do An Annoucement"),
+          title:  Text("Do An Announcement"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Mytextfields(
-                label: "Enter Annoucement",
+                label: "Enter Announcement",
                 controller: code,
               ),
             ],
@@ -49,15 +49,17 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel",style: TextStyle(
-                color: Colors.black,
-              ),),
+              child: Text(
+                "Cancel",
+                style: TextStyle(color: Colors.black),
+              ),
             ),
             TextButton(
               onPressed: () {},
-              child: const Text("Done",style:TextStyle(
-                color: Colors.black,
-              ),),
+              child: Text(
+                "Done",
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         );
@@ -68,13 +70,14 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: null,
+      appBar: AppBar(
+        title: null,
         leading: IconButton(onPressed: (){
           Navigator.pop(context);
         }, icon: Icon(Icons.arrow_back,size: 35,)),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: ListView.builder(
           itemCount: announcements.length,
           itemBuilder: (context, index) {
@@ -84,23 +87,23 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
-              color: const Color(0xFFEAF0FF), // very light blue shade
-              margin: const EdgeInsets.only(bottom: 15),
+              color:  Color(0xFFEAF0FF),
+              margin:  EdgeInsets.only(bottom: 15),
               child: ListTile(
                 contentPadding:
                 const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                 title: Text(
                   announcement["text"]!,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
+                  padding:  EdgeInsets.only(top: 5.0),
                   child: Text(
                     announcement["time"]!,
-                    style: const TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Colors.grey),
                   ),
                 ),
               ),
@@ -114,11 +117,11 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
         onPressed: () {
           _AnnoucementDialogBox();
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Add new announcement!")),
+             SnackBar(content: Text("Add new announcement!")),
           );
         },
-        backgroundColor: const Color(0xFF4169E1),
-        child: const Icon(Icons.add, size: 30,color: Colors.white,),
+        backgroundColor:  Color(0xFF4169E1),
+        child: Icon(Icons.add, size: 30,color: Colors.white,),
       ),
     );
   }

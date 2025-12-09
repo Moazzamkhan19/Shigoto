@@ -35,18 +35,18 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Upcoming Tasks"),
+        title:  Text("Upcoming Tasks"),
         centerTitle: true,
-        backgroundColor: const Color(0xFF4169E1),
+        backgroundColor:  Color(0xFF4169E1),
         leading: IconButton(
           onPressed: () {
             Navigator.pushReplacementNamed(context, '/Dashboard');
           },
-          icon: const Icon(Icons.arrow_back, size: 30),
+          icon:  Icon(Icons.arrow_back, size: 30),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0),
         child: ListView.builder(
           itemCount: upcomings.length,
           itemBuilder: (context, index) {
@@ -56,22 +56,22 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
-              color: const Color(0xFFEAF0FF), // very light blue shade
-              margin: const EdgeInsets.only(bottom: 15),
+              color:  Color(0xFFEAF0FF), // very light blue shade
+              margin:  EdgeInsets.only(bottom: 15),
               child: ListTile(
                 contentPadding:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                 EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                 title: Text(
                   upcoming["task"]!,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 5),
+                   SizedBox(height: 5),
                     Text("Due: ${upcoming["due"]}"),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       "Status: ${upcoming["status"]}",
                       style: TextStyle(
@@ -85,7 +85,6 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                     ),
                   ],
                 ),
-               /* trailing: const Icon(Icons.arrow_forward_ios, size: 18),*/
               ),
             );
           },

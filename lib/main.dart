@@ -34,10 +34,10 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const Loginscreen(),
         '/Dashboard': (context) => const Dashboardscreen(),
-        '/ProjectBoard': (context) => const Projectboardscreen(),
-        '/CreateTask': (context) => CreateTaskScreen(),
+        // '/ProjectBoard': (context) => const Projectboardscreen(),
+       // '/CreateTask': (context) => CreateTaskScreen(),
         '/TaskDetail': (context) => Taskdetail(),
-        '/TeamMember': (context) => TeamMemberScreen(),
+        // '/TeamMember': (context) => TeamMemberScreen(),
         '/Analytics': (context) => AnalyticsScreen(),
         '/Settings': (context) => SettingsScreen(),
         '/Signup': (context) => SignupScreen(),

@@ -98,9 +98,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       ),
                     ),
                   ),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 5,
+                  Column(
                     children: const [
                       LegendItem(color: Colors.deepPurpleAccent, text: 'In progress'),
                       LegendItem(color: Colors.redAccent, text: 'Pending'),

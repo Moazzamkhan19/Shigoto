@@ -63,6 +63,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
       Navigator.pushReplacementNamed(context, '/login');
     }
   }
+
   Widget _buildProjectItem(
       BuildContext context,
       ProjectModel project,
@@ -105,10 +106,13 @@ class _DashboardscreenState extends State<Dashboardscreen> {
       },
       child: InkWell(
         onTap: () {
-          Navigator.pushReplacementNamed(
+          Navigator.push(
             context,
-            '/ProjectBoard',
-            arguments: project,
+            MaterialPageRoute(
+              builder: (_) => Projectboardscreen(
+                projectId: project.projectId,
+              ),
+            ),
           );
         },
         onLongPress: () {
@@ -634,36 +638,27 @@ class _DashboardscreenState extends State<Dashboardscreen> {
 
           // Project List
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('projects')
-                  .where('ownerId', isEqualTo: currentUserId)
-                  .snapshots(),
+            child: StreamBuilder<List<ProjectModel>>(
+              stream: Projectcontroller().getUserProjects(currentUserId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(child: Text("No projects found."));
                 }
 
-                List<ProjectModel> projects = snapshot.data!.docs
-                    .map((doc) =>
-                    ProjectModel.fromMap(doc.data() as Map<String, dynamic>))
-                    .toList();
-
+                final projects = snapshot.data!;
                 return ListView.builder(
                   itemCount: projects.length,
                   itemBuilder: (context, index) {
                     final project = projects[index];
-
                     return _buildProjectItem(
                       context,
                       project,
                       index,
-                          (int i) async {
-                        await projectController.deleteProject(
+                          (i) async {
+                        await Projectcontroller().deleteProject(
                           userid: currentUserId,
                           projectid: project.projectId,
                         );
@@ -672,7 +667,8 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                   },
                 );
               },
-            ),
+            )
+
           ),
         ],
       ),

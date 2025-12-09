@@ -18,7 +18,6 @@ class MyDropdownField extends StatelessWidget {
   Widget build(BuildContext context) {
     // Extract items from map keys
     final items = itemDisplay.keys.toList();
-
     return DropdownButtonFormField<String>(
       value: value,
       hint: Text(hint),
