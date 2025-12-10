@@ -38,7 +38,6 @@ class TaskModel {
       assignedTo: List<String>.from(map['assignedTo'] ?? []),
     );
   }
-
   Map<String, dynamic> toMap() {
     return {
       'taskId': taskId,

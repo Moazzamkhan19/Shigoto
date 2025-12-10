@@ -274,7 +274,7 @@ class _TaskDetailState extends State<TaskDetail> {
             // Header
             Row(
               children: const [
-                Icon(Icons.task, size: 35, color: Colors.blueAccent),
+                Icon(Icons.task, size: 38, color: Colors.blueAccent),
                 SizedBox(width: 10),
                 Text(
                   "Task Detail",

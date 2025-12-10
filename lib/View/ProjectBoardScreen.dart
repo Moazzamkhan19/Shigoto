@@ -111,7 +111,6 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
                       }
 
                       final tasks = snapshot.data!;
-
                       return GridView.builder(
                         itemCount: tasks.length,
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

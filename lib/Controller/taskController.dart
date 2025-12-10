@@ -61,7 +61,6 @@ class TaskController {
     }
     return userMap;
   }
-
   Future<bool> updateTask({
     required String taskId,
     required String taskName,
