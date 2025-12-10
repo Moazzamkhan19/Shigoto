@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../Controller/taskController.dart';
 import '../Model/Task_Model.dart';
+import 'TaskDetail.dart';
 import 'createTaskScreen.dart';
 import 'TeamMembersScreen.dart';
 
@@ -123,10 +124,16 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
                           final task = tasks[index];
                           return InkWell(
                             onTap: () {
-                              // Navigate to TaskDetail if you want
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TaskDetail(task: task),
+                                ),
+                              );
                             },
                             child: _buildCardView(task.taskName),
                           );
+
                         },
                       );
                     },

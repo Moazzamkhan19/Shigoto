@@ -1,205 +1,420 @@
 import 'package:flutter/material.dart';
+import '../Controller/taskController.dart';
+import '../Model/Task_Model.dart';
 
-class Taskdetail extends StatefulWidget {
-  const Taskdetail({super.key});
+class TaskDetail extends StatefulWidget {
+  final TaskModel task;
+  const TaskDetail({super.key, required this.task});
 
   @override
-  State<Taskdetail> createState() => _TaskdetailState();
+  State<TaskDetail> createState() => _TaskDetailState();
 }
 
-class _TaskdetailState extends State<Taskdetail> {
+class _TaskDetailState extends State<TaskDetail> {
+  final TaskController _taskController = TaskController();
+  Map<String, String>? userNames;
+  String? selectedAssignee;
   int _selectedIndex = 0;
+
+  // Local editable task
+  late TaskModel _editableTask;
+
+  @override
+  void initState() {
+    super.initState();
+    _editableTask = widget.task; // Initialize editable task
+    _loadUserNames();
+  }
+
+  void _loadUserNames() async {
+    List<String> ids = [_editableTask.ownerId, ..._editableTask.assignedTo];
+    final namesMap = await _taskController.getUserNames(ids);
+    setState(() {
+      userNames = namesMap;
+      if (_editableTask.assignedTo.isNotEmpty) {
+        selectedAssignee = namesMap[_editableTask.assignedTo.first];
+      }
+    });
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-    if (index == 0)
-    {
-      Navigator.pushNamed(context, '/Dashboard');
-    }
-    else if (index == 1)
-    {
-      Navigator.pushReplacementNamed(context, '/Upcoming');
-    }
-    else
-    {
-      Navigator.pushReplacementNamed(context, '/Settings');
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/Dashboard');
+        break;
+      case 1:
+        Navigator.pushReplacementNamed(context, '/Upcoming');
+        break;
+      case 2:
+        Navigator.pushReplacementNamed(context, '/Settings');
+        break;
     }
   }
-  // Your comments list remains the same
-  List<Map<String, String>> comments = [
-    {
-      'name': 'Moazzam',
-      'tasks': '5',
-      'position': 'Team Lead',
-      'comment': 'Doing great progress on the project.'
-    },
-    {
-      'name': 'Ali',
-      'tasks': '3',
-      'position': 'UI Designer',
-      'comment': 'Working on login screen design.'
-    },
-    {
-      'name': 'Awais',
-      'tasks': '4',
-      'position': 'Backend Developer',
-      'comment': 'API integration is in progress.'
-    },
-  ];
+
+  String getPriorityText(int priority) {
+    switch (priority) {
+      case 0:
+        return "Low";
+      case 1:
+        return "Intermediate";
+      case 2:
+        return "High";
+      default:
+        return "Unknown";
+    }
+  }
+
+  void _showAssigneesDialog(List<String> assignees) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text(
+            "Assigned Users",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            height: 300,
+            child: ListView.builder(
+              itemCount: assignees.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.person, color: Colors.blueAccent),
+                      const SizedBox(width: 10),
+                      Text(
+                        assignees[index],
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Close"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // ---------------- Edit Task Dialog ----------------
+  void _showEditTaskDialog() {
+    final TextEditingController nameController =
+    TextEditingController(text: _editableTask.taskName);
+    final TextEditingController descriptionController =
+    TextEditingController(text: _editableTask.description);
+    DateTime? selectedDueDate = _editableTask.dueDate;
+    int selectedPriority = _editableTask.priority;
+    String selectedStatus = _editableTask.status;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text("Edit Task",
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: "Task Name"),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: descriptionController,
+                  maxLines: 3,
+                  decoration: const InputDecoration(labelText: "Description"),
+                ),
+                const SizedBox(height: 10),
+                DropdownButtonFormField<int>(
+                  value: selectedPriority,
+                  decoration: const InputDecoration(labelText: "Priority"),
+                  items: const [
+                    DropdownMenuItem(value: 0, child: Text("Low")),
+                    DropdownMenuItem(value: 1, child: Text("Intermediate")),
+                    DropdownMenuItem(value: 2, child: Text("High")),
+                  ],
+                  onChanged: (value) {
+                    selectedPriority = value!;
+                  },
+                ),
+                const SizedBox(height: 10),
+                DropdownButtonFormField<String>(
+                  value: selectedStatus,
+                  decoration: const InputDecoration(labelText: "Status"),
+                  items: const [
+                    DropdownMenuItem(value: "Pending", child: Text("Pending")),
+                    DropdownMenuItem(
+                        value: "In Progress", child: Text("In Progress")),
+                    DropdownMenuItem(
+                        value: "Completed", child: Text("Completed")),
+                  ],
+                  onChanged: (value) {
+                    selectedStatus = value!;
+                  },
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    const Text("Due Date: "),
+                    TextButton(
+                      onPressed: () async {
+                        final pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: selectedDueDate ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (pickedDate != null) {
+                          setState(() {
+                            selectedDueDate = pickedDate;
+                          });
+                        }
+                      },
+                      child: Text(
+                          "${selectedDueDate!.day}/${selectedDueDate!.month}/${selectedDueDate!.year}"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                bool success = await _taskController.updateTask(
+                  taskId: _editableTask.taskId,
+                  taskName: nameController.text,
+                  description: descriptionController.text,
+                  status: selectedStatus,
+                  priority: selectedPriority,
+                  assignedTo: _editableTask.assignedTo,
+                  dueDate: selectedDueDate,
+                );
+
+                if (success) {
+                  setState(() {
+                    // Replace editable task with updated version
+                    _editableTask = TaskModel(
+                      taskId: _editableTask.taskId,
+                      projectId: _editableTask.projectId,
+                      taskName: nameController.text,
+                      description: descriptionController.text,
+                      status: selectedStatus,
+                      priority: selectedPriority,
+                      ownerId: _editableTask.ownerId,
+                      assignedTo: _editableTask.assignedTo,
+                      dueDate: selectedDueDate!,
+                    );
+                  });
+                  Navigator.pop(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Failed to update task")),
+                  );
+                }
+              },
+              child: const Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Safely get the first comment data, or an empty map if the list is empty
-    final firstComment = comments.isNotEmpty
-        ? comments[0]
-        : <String, String>{
-      'name': 'No Comment',
-      'tasks': '0',
-      'position': '',
-      'comment': 'No comments available.'
-    };
-    final commentName = firstComment['name'] ?? 'U';
-    final initial = commentName.isNotEmpty ? commentName[0] : 'U';
+    if (userNames == null) {
+      return Scaffold(
+        appBar: AppBar(),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final ownerName = userNames![_editableTask.ownerId] ?? _editableTask.ownerId;
+    final assigneeNames = _editableTask.assignedTo
+        .map((id) => userNames![id] ?? id)
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
         title: null,
         leading: IconButton(
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/ProjectBoard');
-          },
+          onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back, size: 35),
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment:
-          CrossAxisAlignment.start, // left align outer column
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Task Detail",
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 15),
-            Card(
-              color: const Color(0xB3FFFFFF),
-              child: Container(
-                width: double.infinity, // <-- Makes card take full width
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment
-                      .start, // left align inner content
-                  children: [
-                    const Text(
-                      "Design Login Page",
-                      style:
-                      TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 15),
-                    Container(
-                      width: 150,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFCDEEFF),
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: const Text(
-                        "In-Progress",
-                        style: TextStyle(fontSize: 20),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    Container(
-                      width: 150,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFCDEEFF),
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: const Text(
-                        "Assigned to All",
-                        style: TextStyle(fontSize: 20),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    const SizedBox(height: 55),
-                    const Text(
-                      "Re-Designing Login Screen",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-            // The Row containing the buttons
+            // Header
             Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                  ),
-                  child: const Text(
-                    "Edit Task",
-                    style: TextStyle(fontSize: 20, color: Colors.black),
-                  ),
-                ),
-                const SizedBox(width: 50),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                  ),
-                  child: const Text(
-                    "Comment",
-                    style: TextStyle(fontSize: 20, color: Colors.black),
-                  ),
+              children: const [
+                Icon(Icons.task, size: 35, color: Colors.blueAccent),
+                SizedBox(width: 10),
+                Text(
+                  "Task Detail",
+                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-            // The original ListView.builder code has been removed.
-            // The SizedBox(height: 20,) was also inside the Row and has been removed.
-            const SizedBox(height: 20), // Add spacing after buttons
+            const SizedBox(height: 20),
 
-            // --- Displaying a single Card (the first comment) instead of a list ---
+            // Task Card
             Card(
-              color: const Color(0xB3FFFFFF),
-              elevation: 3,
-              margin: const EdgeInsets.symmetric(vertical: 8),
+              color: Colors.white,
+              elevation: 8,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(20),
               ),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.blueAccent,
-                  child: Text(
-                    initial,
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                title: Text(
-                  commentName,
-                  style:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                subtitle: Column(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Position: ${firstComment['position']}'),
-                    Text('Tasks: ${firstComment['tasks']}'),
-                    const SizedBox(height: 4),
+                    // Task Title
                     Text(
-                      '"${firstComment['comment']}"',
-                      style: const TextStyle(fontStyle: FontStyle.italic),
+                      "Task Name: ${_editableTask.taskName}",
+                      style: const TextStyle(
+                          fontSize: 32, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 30),
+                    // Status & Priority
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade100,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(_editableTask.status,
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600)),
+                        ),
+                        const SizedBox(width: 16),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.green.shade100,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                              "Priority: ${getPriorityText(_editableTask.priority)}",
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600)),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    // Description
+                    Text("Description:",
+                        style: const TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
+                    Text(_editableTask.description,
+                        style: const TextStyle(fontSize: 20)),
+                    const SizedBox(height: 25),
+                    // Owner
+                    Row(
+                      children: [
+                        const Text("Created By: ",
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold)),
+                        Text(ownerName, style: const TextStyle(fontSize: 20)),
+                      ],
+                    ),
+                    const SizedBox(height: 18),
+                    // Assignees
+                    Row(
+                      children: [
+                        const Text("Assignees: ",
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: () => _showAssigneesDialog(assigneeNames),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue.shade100,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 18),
+                          ),
+                          child: const Text(
+                            "View",
+                            style:
+                            TextStyle(fontSize: 16, color: Colors.black),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // Due Date
+                    Row(
+                      children: [
+                        const Text("Due Date: ",
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold)),
+                        Text(
+                            "${_editableTask.dueDate.day}/${_editableTask.dueDate.month}/${_editableTask.dueDate.year}",
+                            style: const TextStyle(fontSize: 20)),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    // Buttons
+                    Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: _showEditTaskDialog,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue.shade300,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 20),
+                          ),
+                          child: const Text("Edit Task",style: TextStyle(color: Colors.black),),
+                        ),
+                        const SizedBox(width: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Could add comment dialog here
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green.shade300,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 20),
+                          ),
+                          child: const Text("Comment",style: TextStyle(color: Colors.black),
+                        ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                isThreeLine: true,
               ),
             ),
           ],
@@ -211,19 +426,11 @@ class _TaskdetailState extends State<Taskdetail> {
         unselectedItemColor: Colors.white,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        items: const <BottomNavigationBarItem>[
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month),
-            label: 'Upcoming',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
+              icon: Icon(Icons.calendar_month), label: 'Upcoming'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
         selectedItemColor: Colors.lightBlueAccent,
       ),

@@ -49,5 +49,49 @@ class TaskController {
         .toList());
   }
 
+  Future<Map<String, String>> getUserNames(List<String> userIds) async {
+    Map<String, String> userMap = {};
+    for (var id in userIds) {
+      final doc = await _firestore.collection('users').doc(id).get();
+      if (doc.exists) {
+        userMap[id] = doc.data()?['username'] ?? 'Unknown';
+      } else {
+        userMap[id] = 'Unknown';
+      }
+    }
+    return userMap;
+  }
+
+  Future<bool> updateTask({
+    required String taskId,
+    required String taskName,
+    required String description,
+    required String status,
+    required int priority,
+    required List<String> assignedTo,
+    required DateTime? dueDate,
+  }) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('tasks')
+          .doc(taskId)
+          .update({
+        'taskName': taskName,
+        'description': description,
+        'status': status,
+        'priority': priority,
+        'assignedTo': assignedTo,
+        'dueDate': dueDate,
+      });
+
+      return true;
+    } catch (e) {
+      print("Task update failed: $e");
+      return false;
+    }
+  }
+
+
+
 
 }

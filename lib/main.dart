@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         '/Dashboard': (context) => const Dashboardscreen(),
         // '/ProjectBoard': (context) => const Projectboardscreen(),
        // '/CreateTask': (context) => CreateTaskScreen(),
-        '/TaskDetail': (context) => Taskdetail(),
+        // '/TaskDetail': (context) => Taskdetail(),
         // '/TeamMember': (context) => TeamMemberScreen(),
         '/Analytics': (context) => AnalyticsScreen(),
         '/Settings': (context) => SettingsScreen(),
