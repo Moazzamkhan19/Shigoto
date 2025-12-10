@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shigoto/Components/MyTextFields.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../Controller/Authentication.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -14,7 +16,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool isDarkMode = false;
   final TextEditingController nameController = TextEditingController();
 
-  static const String _settingsImagePath = 'assets/images/settingVector.png';
+  static const String _settingsImagePath = 'assets/images/setting_vector.png';
 
   @override
   void dispose() {
@@ -80,64 +82,139 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     const SizedBox(height: 25),
 
-                    // --- SET PROFILE ---
-                    Row(children: [
-                      Text("Set Profile Picture",style:TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      )),
-                      SizedBox(width: 150,),
-                      IconButton(onPressed: (){
-                        //SETTING PROFILE CODE
-                      }, icon: Icon(Icons.account_circle,size: 40,))
-                    ],),
-
-                    // --- Dark Mode Switch ---
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Dark Mode",
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    //---HELP SUPPORT
+                    // --- HELP SUPPORT BUTTON ---
+                    Center(
+                      child: InkWell(
+                        onTap: () async {
+                          final Uri emailUri = Uri(
+                            scheme: 'mailto',
+                            path: 'moazzamk12319@gmail.com', // replace with your support email
+                            queryParameters: {
+                              'subject': 'Help Support',
+                              'body': 'Hello, I need assistance with...'
+                            },
+                          );
+                          if (await canLaunchUrl(emailUri)) {
+                            await launchUrl(emailUri);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Could not open email app'))
+                            );
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              Icon(Icons.help, color: Colors.white),
+                              SizedBox(width: 8),
+                              Text(
+                                "Help Support",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        Switch(
-                          value: isDarkMode,
-                          activeColor: const Color(0xFF4169E1),
-                          onChanged: (value) {
-                            setState(() {
-                              isDarkMode = value;
-                              // You would typically update the app's theme here
-                            });
-                          },
-                        ),
-                      ],
+                      ),
                     ),
-                    // --------------------------
+                    const SizedBox(height: 30),
 
-                    const SizedBox(height: 40),
 
                     // --- Delete Profile Button ---
                     Center(
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.redAccent,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 30, vertical: 14),
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
                           elevation: 5, // Add some elevation
                         ),
-                        onPressed: () {
-                          showAlertDialog(context);
+                        onPressed: () async {
+                          final TextEditingController passwordController = TextEditingController();
+
+                          // Show dialog to enter password
+                          await showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (dialogContext) {
+                              return AlertDialog(
+                                title: const Text('Confirm Deletion'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text('Enter your password to delete your profile'),
+                                    const SizedBox(height: 15),
+                                    TextField(
+                                      controller: passwordController,
+                                      obscureText: true,
+                                      decoration: const InputDecoration(
+                                        labelText: "Password",
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(dialogContext).pop();
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      Navigator.of(dialogContext).pop();
+
+                                      final auth = Authentication();
+                                      final user = FirebaseAuth.instance.currentUser;
+
+                                      if (user != null) {
+                                        String result = await auth.deleteProfile(
+                                          userId: user.uid,
+                                          email: user.email ?? "",
+                                          password: passwordController.text,
+                                        );
+
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text(result)),
+                                        );
+
+                                        if (result == "Profile deleted successfully") {
+                                          // Redirect to login or landing page
+                                          Navigator.pushReplacementNamed(context, '/Login');
+                                        }
+                                      }
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                         icon: const Icon(Icons.delete, color: Colors.white),
                         label: const Text(
                           "Delete Profile",
-                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
+
                     // -----------------------------
                   ],
                 ),

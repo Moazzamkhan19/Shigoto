@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Model/Task_Model.dart';
+import 'package:shigoto/Controller/ProjectController.dart';
 
 class TaskController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String tasksCollection = 'tasks';
+  Projectcontroller projectcontroller=Projectcontroller();
 
   Future<bool> addTask({
     required String projectId,
@@ -25,13 +27,18 @@ class TaskController {
         taskName: taskName,
         status: status,
         description: description,
-        dueDate: dueDate ?? DateTime.now().add(Duration(days: 7)),
+        dueDate: dueDate ?? DateTime.now().add(const Duration(days: 7)),
         priority: priority,
         ownerId: ownerId,
         assignedTo: assignedTo,
       );
 
+      // 1. Add task
       await taskDoc.set(task.toMap());
+
+      // 2. Update analytics (✔ correct place)
+      await projectcontroller.updateProjectAnalytics(projectId);
+
       return true;
     } catch (e) {
       print('Error adding task: $e');
@@ -82,13 +89,39 @@ class TaskController {
         'assignedTo': assignedTo,
         'dueDate': dueDate,
       });
-
       return true;
     } catch (e) {
       print("Task update failed: $e");
       return false;
     }
   }
+  Stream<Map<String, dynamic>> getProjectCompletion(String projectId) {
+    return FirebaseFirestore.instance
+        .collection('tasks')
+        .where('projectId', isEqualTo: projectId)
+        .snapshots()
+        .map((snapshot) {
+      int total = snapshot.docs.length;
+      int completed = snapshot.docs.where((doc) => doc['isCompleted'] == true).length;
+
+      double percent = total == 0 ? 0.0 : completed / total;
+
+      return {
+        "total": total,
+        "completed": completed,
+        "percent": percent,
+      };
+    });
+  }
+  Stream<List<TaskModel>> getAllUserTasks(String userId) {
+    return FirebaseFirestore.instance
+        .collection("tasks")
+        .where("userId", isEqualTo: userId)
+        .snapshots()
+        .map((snap) =>
+        snap.docs.map((doc) => TaskModel.fromMap(doc.data())).toList());
+  }
+
 
 
 

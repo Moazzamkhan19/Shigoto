@@ -143,6 +143,35 @@ class Projectcontroller {
       return userProjects;
     });
   }
+  Future<void> updateProjectAnalytics(String projectId) async {
+    final tasksSnapshot = await _firestore
+        .collection('tasks')
+        .where('projectId', isEqualTo: projectId)
+        .get();
+
+    int totalTasks = tasksSnapshot.docs.length;
+    int completedTasks = tasksSnapshot.docs
+        .where((doc) => doc['status'] == 'completed')
+        .length;
+
+    double percent = totalTasks == 0
+        ? 0
+        : completedTasks / totalTasks;
+
+    // Save analytics
+    await _firestore
+        .collection('projects')
+        .doc(projectId)
+        .collection('analytics')
+        .doc('status')
+        .set({
+      'totalTasks': totalTasks,
+      'completedTasks': completedTasks,
+      'percent': percent,
+    }, SetOptions(merge: true));
+  }
+
+
 
 
 

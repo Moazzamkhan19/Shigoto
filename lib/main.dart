@@ -38,7 +38,6 @@ class MyApp extends StatelessWidget {
        // '/CreateTask': (context) => CreateTaskScreen(),
         // '/TaskDetail': (context) => Taskdetail(),
         // '/TeamMember': (context) => TeamMemberScreen(),
-        '/Analytics': (context) => AnalyticsScreen(),
         '/Settings': (context) => SettingsScreen(),
         '/Signup': (context) => SignupScreen(),
         '/Upcoming': (context) => UpcomingScreen(),

@@ -36,9 +36,6 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
       case 2:
         Navigator.pushReplacementNamed(context, '/Upcoming');
         break;
-      case 3:
-        Navigator.pushReplacementNamed(context, '/Analytics');
-        break;
       default:
         Navigator.pushReplacementNamed(context, '/Settings');
     }
@@ -184,7 +181,6 @@ class _ProjectboardscreenState extends State<Projectboardscreen> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.campaign), label: 'Announcement'),
           BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: 'Upcoming'),
-          BottomNavigationBarItem(icon: Icon(Icons.pie_chart), label: 'Project Analytics'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
         selectedItemColor: Colors.lightBlueAccent,

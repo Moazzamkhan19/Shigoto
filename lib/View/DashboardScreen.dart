@@ -9,7 +9,8 @@ import 'package:shigoto/Controller/Authentication.dart';
 import 'package:shigoto/Model/Project_Model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
-import '../Controller/ProjectController.dart';
+import 'package:shigoto/Controller/ProjectController.dart';
+import 'package:shigoto/Controller/taskController.dart';
 class Dashboardscreen extends StatefulWidget {
   const Dashboardscreen({super.key});
 
@@ -27,16 +28,13 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     setState(() {
       _selectedIndex = index;
     });
-    if (index == 4) { // 4 = Settings (0-based indexing)
+    if (index == 3) { // 4 = Settings (0-based indexing)
       Navigator.pushReplacementNamed(context, '/Settings');
     }
     else if (index == 1) {
       _buildAddProjectDialogBox();
     }
     else if (index == 2) {
-      _JoinTeamDialogBox();
-    }
-    else if (index == 3) {
       Navigator.pushReplacementNamed(context, '/Upcoming');
     }
   }
@@ -75,10 +73,9 @@ class _DashboardscreenState extends State<Dashboardscreen> {
     final String sdate = "${project.startDate.toLocal()}".split(' ')[0];
     final String edate = "${project.endDate.toLocal()}".split(' ')[0];
 
-    // Placeholder for completion (will be dynamic once tasks are implemented)
-    final double rate = 0.5;
-
     final Projectcontroller projectController = Projectcontroller();
+    final TaskController _taskController = TaskController();
+
 
     return Dismissible(
       key: ValueKey(project.projectId),
@@ -142,25 +139,38 @@ class _DashboardscreenState extends State<Dashboardscreen> {
                   const SizedBox(height: 10.0),
 
                   // Progress bar + %
-                  Row(
-                    children: [
-                      Expanded(
-                        child: LinearProgressIndicator(
-                          value: rate,
-                          backgroundColor: Colors.grey[300],
-                          color: rate == 1.0 ? Colors.green : Colors.blue,
-                          minHeight: 8.0,
-                          borderRadius: BorderRadius.circular(4.0),
+                StreamBuilder(
+                  stream: _taskController.getProjectCompletion(project.projectId),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const LinearProgressIndicator();
+                    }
+
+                    final data = snapshot.data!;
+                    final percent = data['percent'];
+                    final total = data['total'];
+                    final completed = data['completed'];
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: LinearProgressIndicator(
+                            value: percent,
+                            backgroundColor: Colors.grey[300],
+                            color: percent == 1.0 ? Colors.green : Colors.blue,
+                            minHeight: 8.0,
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 10.0),
-                      Text(
-                        '${(rate * 100).toStringAsFixed(0)}%',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10.0),
+                        const SizedBox(width: 10),
+                        Text(
+                          '${(percent * 100).toStringAsFixed(0)}%',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                const SizedBox(height: 10.0),
 
                   // Status Row
                   Row(
@@ -385,43 +395,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
       },
     );
   }
-  void _JoinTeamDialogBox() async {
-    TextEditingController code = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Color(0xFFD6E0FF),
-          title: const Text("Join Project Team"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Project Name Field
-              Mytextfields(
-                label: "Enter Team Code",
-                controller: code,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel",style: TextStyle(
-                color: Colors.black,
-              ),),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: const Text("Join",style:TextStyle(
-                color: Colors.black,
-              ),),
-            ),
-          ],
-        );
-      },
-    );
-  }
+
   Widget profileDialogBox(BuildContext context) {
     final ImagePicker _picker = ImagePicker();
     final user = FirebaseAuth.instance.currentUser;
@@ -687,10 +661,6 @@ class _DashboardscreenState extends State<Dashboardscreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.add_box_rounded, color: Colors.white),
             label: 'Add Project',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add, color: Colors.white),
-            label: 'Join',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month, color: Colors.white),

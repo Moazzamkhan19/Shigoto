@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../Components/MyTextFields.dart';
+import 'package:shigoto/Model/Annoucement.dart';
+import 'package:shigoto/Controller/AnnouncementService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AnnouncementScreen extends StatefulWidget {
   const AnnouncementScreen({super.key});
@@ -9,57 +13,50 @@ class AnnouncementScreen extends StatefulWidget {
 }
 
 class _AnnouncementScreenState extends State<AnnouncementScreen> {
-  List<Map<String, String>> announcements = [
-    {
-      "text": "Team meeting scheduled for Monday 10 AM.",
-      "time": "Today, 8:30 AM"
-    },
-    {
-      "text": "Server maintenance completed successfully.",
-      "time": "Yesterday, 5:45 PM"
-    },
-    {
-      "text": "New feature rollout planned for next week.",
-      "time": "22 Oct 2025, 9:00 AM"
-    },
-    {
-      "text": "Please submit project updates by tomorrow.",
-      "time": "21 Oct 2025, 6:00 PM"
-    },
-  ];
+  final AnnouncementService _service = AnnouncementService();
 
-  void _AnnoucementDialogBox() async {
-    TextEditingController code = TextEditingController();
+  void _AnnoucementDialogBox() {
+    TextEditingController messageController = TextEditingController();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Color(0xFFD6E0FF),
-          title:  Text("Do An Announcement"),
+          backgroundColor: const Color(0xFFD6E0FF),
+          title: const Text("Do An Announcement"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Mytextfields(
                 label: "Enter Announcement",
-                controller: code,
+                controller: messageController,
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(
-                "Cancel",
-                style: TextStyle(color: Colors.black),
-              ),
+              child: const Text("Cancel", style: TextStyle(color: Colors.black)),
             ),
             TextButton(
-              onPressed: () {},
-              child: Text(
-                "Done",
-                style: TextStyle(color: Colors.black),
-              ),
+              onPressed: () async {
+                if (messageController.text.trim().isEmpty) return;
+
+                final user = FirebaseAuth.instance.currentUser;
+
+                final announcement = AnnouncementModel(
+                  announcementId: FirebaseFirestore.instance.collection("announcements").doc().id,
+                  userId: user!.uid,
+                  message: messageController.text.trim(),
+                  createdAt: DateTime.now(),
+                );
+
+                await _service.addAnnouncement(announcement);
+
+                Navigator.pop(context);
+              },
+              child: const Text("Done", style: TextStyle(color: Colors.black)),
             ),
           ],
         );
@@ -67,63 +64,102 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     );
   }
 
+  // 🔥 Fetch username for each announcement
+  Future<String> getUserName(String userId) async {
+    final snap = await FirebaseFirestore.instance.collection("users").doc(userId).get();
+    if (snap.exists) {
+      return snap.data()!["username"] ?? "Unknown User";
+    }
+    return "Unknown User";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: null,
-        leading: IconButton(onPressed: (){
-          Navigator.pop(context);
-        }, icon: Icon(Icons.arrow_back,size: 35,)),
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back, size: 35),
+        ),
       ),
+
       body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: ListView.builder(
-          itemCount: announcements.length,
-          itemBuilder: (context, index) {
-            final announcement = announcements[index];
-            return Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              color:  Color(0xFFEAF0FF),
-              margin:  EdgeInsets.only(bottom: 15),
-              child: ListTile(
-                contentPadding:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                title: Text(
-                  announcement["text"]!,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                subtitle: Padding(
-                  padding:  EdgeInsets.only(top: 5.0),
-                  child: Text(
-                    announcement["time"]!,
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ),
+        padding: const EdgeInsets.all(16.0),
+        child: StreamBuilder<List<AnnouncementModel>>(
+          stream: _service.getAnnouncements(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(color: Color(0xFF4169E1)),
+              );
+            }
+
+            final announcements = snapshot.data!;
+
+            return ListView.builder(
+              itemCount: announcements.length,
+              itemBuilder: (context, index) {
+                final ann = announcements[index];
+
+                return FutureBuilder<String>(
+                  future: getUserName(ann.userId),
+                  builder: (context, userSnap) {
+                    final userName = userSnap.data ?? "Loading...";
+
+                    return Card(
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      color: const Color(0xFFEAF0FF),
+                      margin: const EdgeInsets.only(bottom: 15),
+                      child: ListTile(
+                        contentPadding:
+                        const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                        title: Text(
+                          ann.message,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "By: $userName",
+                                style: const TextStyle(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                ann.createdAt.toString(),
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
             );
           },
         ),
       ),
 
-      // Floating Action Button
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _AnnoucementDialogBox();
-          ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(content: Text("Add new announcement!")),
-          );
-        },
-        backgroundColor:  Color(0xFF4169E1),
-        child: Icon(Icons.add, size: 30,color: Colors.white,),
+        onPressed: _AnnoucementDialogBox,
+        backgroundColor: const Color(0xFF4169E1),
+        child: const Icon(Icons.add, size: 30, color: Colors.white),
       ),
     );
   }
 }
+
 

@@ -304,7 +304,7 @@ class _TaskDetailState extends State<TaskDetail> {
                     ),
                     const SizedBox(height: 30),
                     // Status & Priority
-                    Row(
+                    Column(
                       children: [
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -317,7 +317,7 @@ class _TaskDetailState extends State<TaskDetail> {
                               style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600)),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(height: 16),
                         Container(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 16),
@@ -399,18 +399,7 @@ class _TaskDetailState extends State<TaskDetail> {
                           child: const Text("Edit Task",style: TextStyle(color: Colors.black),),
                         ),
                         const SizedBox(width: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Could add comment dialog here
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green.shade300,
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 20),
-                          ),
-                          child: const Text("Comment",style: TextStyle(color: Colors.black),
-                        ),
-                        ),
+
                       ],
                     ),
                   ],

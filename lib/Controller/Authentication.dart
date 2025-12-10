@@ -121,6 +121,53 @@ class Authentication {
     await _auth.signOut();
     await GoogleSignIn().signOut();
   }
+  Future<String> deleteProfile({
+    required String userId,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      User? user = _auth.currentUser;
+
+      if (user == null) {
+        return "No user logged in";
+      }
+
+      // 1️⃣ Re-authenticate user
+      AuthCredential credential =
+      EmailAuthProvider.credential(email: email, password: password);
+
+      await user.reauthenticateWithCredential(credential);
+
+      // 2️⃣ Delete Firestore profile
+      await _firestore.collection("users").doc(userId).delete();
+
+      // 3️⃣ Delete the auth account
+      await user.delete();
+
+      // 4️⃣ Sign out Google if needed
+      try {
+        await GoogleSignIn().signOut();
+      } catch (_) {}
+
+      return "Success";
+
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "wrong-password") {
+        return "Wrong password";
+      }
+      if (e.code == "user-mismatch" || e.code == "user-not-found") {
+        return "User mismatch";
+      }
+      if (e.code == "requires-recent-login") {
+        return "Please log in again to delete account";
+      }
+      return e.message ?? "Failed to delete account";
+    } catch (e) {
+      return "Error: $e";
+    }
+  }
+
 }
 
 
